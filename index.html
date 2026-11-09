@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Little Game for Jenney</title>
+<meta name="description" content="Three questions. One bouquet. One kiss.">
+<meta property="og:title" content="A little game for Jenney 💌">
+<meta property="og:description" content="Three questions. One bouquet. One kiss.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌹</text></svg>">
+<style>
+body { margin:0; padding:0; background:#f6e4e4; }
+.detect, .r { display:none !important; }
+.detect:checked ~ .fallback { display:none !important; }
+.detect:checked ~ .play { display:block !important; max-height:none !important; overflow:visible !important; }
+.step, .wrong { display:none; }
+.s0 { display:block; }
+#start:checked ~ .play .s0 { display:none; }
+#start:checked ~ .play .s1 { display:block; }
+#q1ok:checked ~ .play .s2 { display:block; }
+#q2ok:checked ~ .play .s3 { display:block; }
+#q3ok:checked ~ .play .s5 { display:block; }
+#q1ok:checked ~ .play .s1,
+#q2ok:checked ~ .play .s2,
+#q3ok:checked ~ .play .s3 { display:none; }
+#q1x1:checked ~ .play .w1, #q1x2:checked ~ .play .w1,
+#q2x1:checked ~ .play .w2, #q2x2:checked ~ .play .w2,
+#q3x1:checked ~ .play .w3, #q3x2:checked ~ .play .w3 { display:block; }
+#q1x1:checked ~ .play .l-q1x1, #q1x2:checked ~ .play .l-q1x2,
+#q2x1:checked ~ .play .l-q2x1, #q2x2:checked ~ .play .l-q2x2,
+#q3x1:checked ~ .play .l-q3x1, #q3x2:checked ~ .play .l-q3x2 {
+border-color:#d9a3a8 !important; color:#b07a80 !important;
+animation: shake .4s ease;
+}
+.opt { cursor:pointer; transition: background .2s, transform .2s; display:block; margin:0 0 12px; padding:15px 18px; border:1.5px solid #e6c4c8; border-radius:14px; background:#fff; font-size:17px; color:#4a1d2a; -webkit-tap-highlight-color:transparent; }
+.opt:hover { background:#fbeef0 !important; transform: translateY(-1px); }
+.btn { display:inline-block; padding:15px 38px; background:#7a1f35; color:#fff8f3; border-radius:40px; font-size:17px; letter-spacing:1px; cursor:pointer; }
+.meter { margin:0 0 6px; font-size:18px; color:#c0485e; letter-spacing:6px; }
+.kicker { margin:0 0 4px; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:#b06a78; }
+.q { margin:0 0 24px; font-size:26px; font-weight:normal; font-style:italic; color:#4a1d2a; }
+.wrong { margin:14px 0 0; font-size:15px; font-style:italic; color:#b06a78; }
+.step { animation: fadeUp .6s ease both; }
+.rose { display:inline-block; animation: bloom .9s cubic-bezier(.2,1.4,.4,1) both; }
+.d1{animation-delay:.2s}.d2{animation-delay:.4s}.d3{animation-delay:.6s}.d4{animation-delay:.8s}
+.d5{animation-delay:1s}.d6{animation-delay:1.2s}.d7{animation-delay:1.4s}.d8{animation-delay:1.6s}
+.d9{animation-delay:1.8s}.d10{animation-delay:2s}
+.kiss { display:inline-block; animation: stamp .7s cubic-bezier(.2,1.6,.4,1) 2.4s both, pulse 1.6s ease-in-out 3.2s infinite; }
+.late { animation: fadeUp .8s ease 3s both; }
+.float { display:inline-block; animation: drift 3s ease-in-out infinite; }
+@keyframes fadeUp { from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:none} }
+@keyframes bloom { 0%{opacity:0; transform:scale(0) rotate(-40deg)} 100%{opacity:1; transform:scale(1) rotate(0)} }
+@keyframes stamp { 0%{opacity:0; transform:scale(3) rotate(-20deg)} 100%{opacity:1; transform:scale(1) rotate(-8deg)} }
+@keyframes pulse { 0%,100%{transform:scale(1) rotate(-8deg)} 50%{transform:scale(1.12) rotate(-8deg)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+@keyframes drift { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@media (max-width:620px){
+.card { width:100% !important; }
+.pad { padding:32px 22px !important; }
+.h1 { font-size:30px !important; }
+}
+</style>
+</head>
+<body style="margin:0; padding:0; background:#f6e4e4;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f6e4e4; height:100vh;">
+<tr><td align="center" valign="middle" style="padding:28px 12px;">
+<table role="presentation" class="card" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background:#fffaf6; border-radius:22px; border:1px solid #ecd2d2;">
+<tr><td style="height:8px; background:#7a1f35; border-radius:22px 22px 0 0; font-size:0; line-height:0;">&nbsp;</td></tr>
+<tr><td class="pad" style="padding:40px 44px 44px; font-family:Georgia, 'Times New Roman', serif; color:#4a1d2a; text-align:center;">
+<div>
+<input type="checkbox" class="detect" checked>
+<input type="radio" class="r" name="go" id="start">
+<input type="radio" class="r" name="q1" id="q1x1">
+<input type="radio" class="r" name="q1" id="q1ok">
+<input type="radio" class="r" name="q1" id="q1x2">
+<input type="radio" class="r" name="q2" id="q2ok">
+<input type="radio" class="r" name="q2" id="q2x1">
+<input type="radio" class="r" name="q2" id="q2x2">
+<input type="radio" class="r" name="q3" id="q3x1">
+<input type="radio" class="r" name="q3" id="q3x2">
+<input type="radio" class="r" name="q3" id="q3ok">
+
+<div class="play" style="display:none;">
+
+<div class="step s0">
+<p style="margin:0 0 8px; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:#b06a78;">A little game for</p>
+<h1 class="h1" style="margin:0 0 10px; font-size:42px; font-weight:normal; font-style:italic; color:#7a1f35;">Jenney</h1>
+<p style="margin:0 0 6px; font-size:30px;"><span class="float">💌</span></p>
+<p style="margin:12px 0 30px; font-size:17px; line-height:1.65; color:#6b3a47;">Three questions about me.<br>Get them all right and something sweet is waiting at the end.</p>
+<label for="start" class="btn">Let's play ♥</label>
+</div>
+
+<div class="step s1">
+<p class="meter">♥ ♡ ♡</p>
+<p class="kicker">Question one</p>
+<h2 class="q">Where did we go on our very first date?</h2>
+<label for="q1x1" class="opt l-q1x1">A rooftop bar in NYC 🌃</label>
+<label for="q1ok" class="opt">UConn, Connecticut 🐾</label>
+<label for="q1x2" class="opt l-q1x2">The movies 🍿</label>
+<p class="wrong w1">Hmm… were you even there? 😏 Try again.</p>
+</div>
+
+<div class="step s2">
+<p class="meter">♥ ♥ ♡</p>
+<p class="kicker">Question two</p>
+<h2 class="q">Who is my favorite dog?</h2>
+<label for="q2x1" class="opt l-q2x1">Clifford the Big Red Dog</label>
+<label for="q2x2" class="opt l-q2x2">Snoopy</label>
+<label for="q2ok" class="opt">Stella 🐶</label>
+<p class="wrong w2">Stella would be so hurt right now. Try again 🐾</p>
+</div>
+
+<div class="step s3">
+<p class="meter">♥ ♥ ♥</p>
+<p class="kicker">Final question</p>
+<h2 class="q">Who is my favorite girl in the whole wide world?</h2>
+<label for="q3x1" class="opt l-q3x1">Pizza 🍕</label>
+<label for="q3x2" class="opt l-q3x2">Myself in the mirror 🪞</label>
+<label for="q3ok" class="opt">Me, Jenney 💕</label>
+<p class="wrong w3">Absolutely not. Wrong. Never. Try again 😤</p>
+</div>
+
+<div class="step s5">
+<p style="margin:0 0 6px; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:#b06a78;">Perfect score</p>
+<h1 class="h1" style="margin:0 0 22px; font-size:38px; font-weight:normal; font-style:italic; color:#7a1f35;">You know me by heart</h1>
+<p style="margin:0; font-size:44px; line-height:1.2;">
+<span class="rose d1">🌹</span> <span class="rose d2">🌹</span> <span class="rose d3">🌹</span><br>
+<span class="rose d4">🌹</span> <span class="rose d5">🌹</span> <span class="rose d6">🌹</span> <span class="rose d7">🌹</span><br>
+<span class="rose d8">🌹</span> <span class="rose d9">🌹</span> <span class="rose d10">🌹</span>
+</p>
+<p style="margin:4px 0 0; font-size:30px; line-height:1;"><span class="rose d10">🎀</span></p>
+<p style="margin:26px 0 6px; font-size:84px; line-height:1;"><span class="kiss">💋</span></p>
+<div class="late">
+<p style="margin:10px 0 6px; font-size:24px; font-style:italic; color:#7a1f35;">A bouquet of roses, minus the thorns,<br>and one very big kiss.</p>
+<p style="margin:18px 0 0; font-size:16px; color:#6b3a47;">I love you, Jenney. ♥</p>
+</div>
+</div>
+
+</div>
+</div>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
